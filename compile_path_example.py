@@ -40,15 +40,14 @@ def compile_folder_path_for_object(vobj):
         paths.append(vobj.name)
 
     thisobj = vobj
-    while hasattr(thisobj, 'parent'):
-        thisobj = thisobj.parent
-        #if thisobj.name == 'Datacenters':
-        #    break
+    while True:
+        try:
+            thisobj = thisobj.parent
+        except (IndexError, AttributeError) as err:
+            break
         if isinstance(thisobj, vim.Folder):
             paths.append(thisobj.name)
     paths.reverse()
-    if paths[0] == 'Datacenters':
-        paths.remove('Datacenters')
     return '/' + '/'.join(paths)
 
 datacenter = get_obj(content, [vim.Datacenter], 'DC0')
